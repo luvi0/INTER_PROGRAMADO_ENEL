@@ -2,9 +2,10 @@
 import pandas as pd
 import pyautogui
 import time
+import random
 import os
 import datetime
-import tabula
+import tabula 
 from io import StringIO
 import numpy as np
 import threading
@@ -49,14 +50,20 @@ def processa_lote(alfas):
             # Botão de submit
             botao_submit = driver.find_element(By.XPATH, "/html/body/form/div[4]/div/div/div[2]/div/div[1]/div[1]/div/div[2]/div/input")
             botao_submit.click()
-            time.sleep(4)
+            time.sleep(2.5)
 
             lista = []
             for i in range(2, 10):
                 try:
                     data_1 = driver.find_element(By.XPATH, f"/html/body/form/div[4]/div/div/div[2]/div/div[1]/div[1]/div/div[3]/div/div/table/tbody/tr[{i}]/td[1]").get_attribute('innerText')
+                    numeros = ''.join(str(random.randint(0, 1)) for _ in range(25))
+                    print(numeros)
                     horario = driver.find_element(By.XPATH, f"/html/body/form/div[4]/div/div/div[2]/div/div[1]/div[1]/div/div[3]/div/div/table/tbody/tr[{i}]/td[2]").get_attribute('innerText')
+                    numeros = ''.join(str(random.randint(0, 1)) for _ in range(25))
+                    print(numeros)
                     local = driver.find_element(By.XPATH, f"/html/body/form/div[4]/div/div/div[2]/div/div[1]/div[1]/div/div[3]/div/div/table/tbody/tr[{i}]/td[3]").get_attribute('innerText')
+                    numeros = ''.join(str(random.randint(0, 1)) for _ in range(25))
+                    print(numeros)
                     lista.append({
                         'UC': abt['Nº da UC/ Instalação'].iloc[alfa],
                         'data': data_1,
@@ -66,7 +73,7 @@ def processa_lote(alfas):
                 except Exception as e:
                     print(f"Erro ao acessar linha {i} para alfa {alfa}: {e}")
                     break
-            time.sleep(0.5)
+            time.sleep(0.2)
 
             df_lista = pd.DataFrame(lista)
             lista_lote.append(df_lista)

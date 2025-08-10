@@ -2,6 +2,7 @@
 import pandas as pd
 import pyautogui
 import time
+import random
 import os
 import datetime
 import tabula
@@ -11,7 +12,19 @@ import threading
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
+
+# Configuração para rodar headless
+chrome_options = Options()
+chrome_options.add_argument("--headless")       # Roda sem abrir a janela
+chrome_options.add_argument("--disable-gpu")    # Necessário em alguns sistemas
+chrome_options.add_argument("--no-sandbox")     # Necessário no Linux
+chrome_options.add_argument("--disable-dev-shm-usage")
+
+# Instala o ChromeDriver apenas uma vez
+#driver_path = ChromeDriverManager().install()
+#service = Service(driver_path)
 
 # Data - copia na busca, um dia anterior ao executado
 hoje = datetime.datetime.now()
@@ -31,9 +44,7 @@ semaphore = threading.Semaphore(8)
 def processa_lote(alfas):
     semaphore.acquire()
     try:
-      
-        driver = webdriver.Chrome()
-        
+        driver = webdriver.Chrome(service=service, options=chrome_options)
         lista_lote = []
 
         for alfa in alfas:
@@ -55,8 +66,11 @@ def processa_lote(alfas):
             for i in range(2, 10):
                 try:
                     data_1 = driver.find_element(By.XPATH, f"/html/body/form/div[4]/div/div/div[2]/div/div[1]/div[1]/div/div[3]/div/div/table/tbody/tr[{i}]/td[1]").get_attribute('innerText')
+                    print(''.join(str(random.randint(0, 1)) for _ in range(8)))
                     horario = driver.find_element(By.XPATH, f"/html/body/form/div[4]/div/div/div[2]/div/div[1]/div[1]/div/div[3]/div/div/table/tbody/tr[{i}]/td[2]").get_attribute('innerText')
+                    print(''.join(str(random.randint(0, 1)) for _ in range(8)))
                     local = driver.find_element(By.XPATH, f"/html/body/form/div[4]/div/div/div[2]/div/div[1]/div[1]/div/div[3]/div/div/table/tbody/tr[{i}]/td[3]").get_attribute('innerText')
+                    print(''.join(str(random.randint(0, 1)) for _ in range(8)))
                     lista.append({
                         'UC': abt['Nº da UC/ Instalação'].iloc[alfa],
                         'data': data_1,
